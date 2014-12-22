@@ -1,0 +1,175 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+
+
+public class Reduction {
+	
+	int[] palette;
+	int[] poids;
+	
+	public Reduction(int[] poids, int[] palette) {
+		this.palette = palette;
+		this.poids = poids;
+	}
+
+	/**
+	 * Renvoi le meileur gris pour un intervalle donné
+	 * @param poids
+	 * @param gris
+	 * @param debut
+	 * @param fin
+	 * @return
+	 */
+	public int meilleurGris(int debut, int fin) {
+		int tmp = 0, tmp2 = 0;
+		for(int i=debut; i<=fin; i++) {
+			tmp += poids[i] * palette[i];
+			tmp2 += poids[i];
+		}
+		return tmp / tmp2;
+	}
+	
+	/**
+	 * Renvoi la distance minimale pour une réduction de n à 1 couleur
+	 * @param poids
+	 * @param gris
+	 * @param debut
+	 * @param fin
+	 * @param meilleurGris
+	 * @return
+	 */
+	public int distanceMin(int debut, int fin){
+		int meilleurGris = meilleurGris(debut, fin);
+		int distanceMin = 0;
+		for (int i = debut; i<=fin; i++){
+			distanceMin += Math.pow((palette[i]-meilleurGris), 2.0) * poids[i]; 
+		}
+		return distanceMin;
+	}
+	
+	/**
+	 * Fonction récursive qui renvoie la distance minimale pour une réduction de n à k couleurs 
+	 * @param poids
+	 * @param gris
+	 * @param debut
+	 * @param k
+	 * @param p
+	 * @return
+	 */
+	public int decomposeRec(int debut, int k) {
+		int distance = 0, distanceRet = -1;
+		if (k == 1) {
+			return distanceMin(debut, palette.length-1);
+		}
+		for (int i = debut ; i < palette.length-1 ; i++) {
+			distance = distanceMin(debut, i) + decomposeRec(i+1, k-1);
+			if (distanceRet == -1 || distance < distanceRet) {
+				distanceRet = distance;
+			}
+		}
+		return distanceRet;
+	}
+	
+	/**
+	 * Fonction itérative respectant le principe de la programmation dynamique
+	 * @param debut
+	 * @param k
+	 * @return
+	 */
+	public int decomposeIt(int debut, int k) {
+		int[][] res = new int[k][palette.length];
+		
+		// Initialisation du tableau pour les cas de base
+		for (int i = 0; i < palette.length; i++) {
+			res[0][i] = distanceMin(i, palette.length-1);
+		}
+		for (int i = 1; i < k; i++) {
+			for (int j = 0; j < palette.length; j++) {
+				res[i][j] = -1;
+			}
+		}
+		// Remplissage du tableau 
+		if(k > 1) {
+			for (int q=1; q<k; q++) {
+				for (int i=debut; i<=palette.length-(q+1); i++) {
+					int distance = 0;
+					for (int j=i; j<=palette.length-(q+1); j++) {
+						distance = distanceMin(i, j) + res[q-1][j+1];
+						if(res[q][i] == -1 || distance < res[q][i]) {
+							res[q][i] = distance;
+						}
+					}
+				}				
+			}			
+		}	
+		return res[k-1][debut];
+	}
+	
+	public void parserFichierPGM(final String nomFichier, final String resultat){
+		try {
+			BufferedWriter ecriture = new BufferedWriter(new FileWriter(resultat));
+			BufferedReader lecteur = new BufferedReader(new FileReader(nomFichier));
+			String temp;
+			String retour = null;
+			int i = 1;
+			int j = 0;
+			String[][] result = null;
+			while ((temp = lecteur.readLine()) != null){
+				if (i == 1){
+					retour = temp + "\n";
+				} else if (i == 2){
+					result = new String[Integer.parseInt(temp.split(" ")[0])][Integer.parseInt(temp.split(" ")[1])];
+					retour = retour + temp + "\n";
+				} else if (i == 3) {
+					retour = retour + temp + "\n";
+				} else {
+					result[j++] = temp.split(" ");
+				}
+				i++;
+			}
+			ecriture.write(retour);
+			ecriture.close();
+			lecteur.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int[] palette  = {5,5,1,1,2,1,10};
+		int[] gris  = {0,20,100,132,164,180,255};
+		Reduction r = new Reduction(palette, gris);
+		int deb = 0;
+		int fin = 6;
+		
+		// Question 1
+		System.out.println("Tableau des distances minimales :");
+		for(int i=0; i<=fin; i++) {
+			for(int k=0; k<i; k++) {
+				System.out.print("\t");
+			}
+			for (int j=i; j<=fin; j++) {
+				System.out.print(r.distanceMin(i, j) + "\t");
+			}
+			System.out.println();
+		}
+		
+		// Question 2		
+		System.out.println("Test iteratif : "+r.decomposeIt(deb, 3));				
+		System.out.println("Test récursif : "+r.decomposeRec(deb, 3));
+		
+		r.parserFichierPGM("init-palettes.pgm", "test.pgm");
+	}
+
+}

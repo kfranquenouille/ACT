@@ -1,0 +1,119 @@
+------- TP4 -------
+
+Franquenouille Kevin
+Cornette Damien
+
+-------------------
+
+1) 	Le certificat est la preuve (ou le témoin) de l'algorithme. 
+
+	Dans le cas présent il s'agit d'une mise en sachet des objets.
+	
+	On peut le réprésenter par un tableau de numéro de sac indexé par le numéro de chaque objet
+	
+   	La taille d'un certificat est de n (le nombre d'objets)
+   	
+   	Taille du certificat <= taille des entrées 
+   	
+   	La taille d'un certificat est linéaire donc bien polynomialement borné
+   				   
+	Algorithme de vérification :
+	
+	debut algo	
+		Pour chaque objet
+			Si l'objet n'est dans aucun sac
+				renvoi echec
+			Sinon
+				On augmente le poids du sac en question du poids de l'objet
+			fin si
+		fin pour
+				
+		Pour chaque sac
+			Si le poids du sac dépasse la capacité autorisée
+				renvoi echec
+			fin si
+		fin pour
+		
+		renvoi vrai	
+	fin algo
+   
+	La complexité de l'algo est de O(n*k), donc bien polynomiale
+   
+2)	Un algorithme non-déterministe polynomial pour le problème serait le suivant :
+
+	debut algo
+		Pour chaque objet
+			Insérer l'objet dans un sac au hasard
+		fin pour
+	fin algo
+
+
+3)
+ 3.1) 	Pour k et n fixés, un certificat peut prendre k^n valeurs (k est le nombre de sacs, n le nombre d'objets)
+ 
+ 3.2) 	Le premier certificat serait tous les objets dans le premier sac, 
+ 		
+ 		alors que le dernier certificat serait tous les objets dans le dernier sac.
+ 		
+ 		L'ordre des certificats serait de prendre le premier objet et de l'insérer dans le sac suivant.
+ 		
+ 		Dès que le premier objet a été inséré dans chaque sac et que la solution est toujours pas trouvée,
+ 		
+ 		on prend l'objet suivant et on l'insère dans le sac suivant et ainsi de suite... 
+ 
+ 3.3)   L'algorithme est le suivant :
+ 
+ 		debut algo
+ 			Tant que le certificat n'est pas le dernier
+ 				Si le certificat est correct
+ 					renvoi vrai
+ 				sinon
+ 					on passe au certificat suivant
+ 			fin tant que
+ 		fin algo
+
+4)
+ 4.1)	Pour réduire polynomialement le problème de Partition en probème de BinPack,
+ 
+ 		on peut transformer le problème de Partition en probème de BinPack.
+ 		
+ 		La transformation est la suivante :
+ 		
+ 		On peut considérer que N nombres de Partition correspond à N objets de BinPack,
+ 		
+ 		la liste des nombres de Partition corresponds à la liste des poids de BinPack,
+ 		
+ 		la somme des nombres de Partition divisé par 2 corresponds à la capacité d'un sac de BinPack,
+ 		
+ 		et enfin on peut prendre un chiffre égal ou inférieur à N pour correspondre au nombre de sac de BinPack.
+ 
+ 4.2)	Selon le cours, si Partition se réduit en BinPack alors Partition est au moins aussi facile que BinPack.
+ 
+ 		Donc BinPack est au moins aussi dure que Partition, donc BinPack est au moins NP-dure mais il ne peut
+ 		
+ 		pas être plus facile.
+ 		
+ 4.3)	Voir les classes PblPartition et SolvePartition
+ 
+5)
+ 5.1)	Sum et Partition sont les mêmes problèmes à la différence près que Partition
+ 	
+ 		cherche une somme d'un sous ensemble égale à la somme des N nombres alors que Sum
+ 		
+ 		cherche une somme d'un sous ensemble égale à un nombre cible
+ 		
+ 		Partition est donc un cas particulier de Sum puisque Sum peut choisir son nombre cible
+ 		
+ 		mais pas Partition.
+ 		
+ 5.2)	Pour réduire Sum en Partition, il suffit de modifier la valeur d'un paramètre de Partition,
+ 
+ 		la cible. voir implémentation sur les classes PblSum et SolveSum.
+ 		
+6)	La réduction de Sum dans BinPack est déjà faite puisque Sum se réduit en Partition qui se réduit lui même
+
+	en BinPack !
+ 
+ 
+ 
+ 

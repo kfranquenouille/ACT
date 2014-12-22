@@ -1,0 +1,307 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class Reduction {
+	
+	int[] palette;
+	int[] poids;
+	List<Intervalle> intervalles;
+	Map<Integer, Integer> palette_tmp;
+	
+	public Reduction(int[] poids, int[] palette) {
+		this.palette = palette;
+		this.poids = poids;
+		this.intervalles = new ArrayList<Intervalle>();
+	}
+
+	/**
+	 * Renvoi le meileur gris pour un intervalle donné
+	 * @param debut
+	 * @param fin
+	 * @return
+	 */
+	public int meilleurGris(int debut, int fin) {
+		int tmp = 0, tmp2 = 0;
+		for(int i=debut; i<=fin; i++) {
+			tmp += poids[i] * palette[i];
+			tmp2 += poids[i];
+		}
+		return tmp / tmp2;
+	}
+	
+	/**
+	 * Renvoi la distance minimale pour une réduction de n à 1 couleur
+	 * @param debut
+	 * @param fin
+	 * @return
+	 */
+	public int distanceMin(int debut, int fin){
+		int meilleurGris = meilleurGris(debut, fin);
+		int distanceMin = 0;
+		for (int i = debut; i<=fin; i++){
+			distanceMin += Math.pow((palette[i]-meilleurGris), 2.0) * poids[i]; 
+		}
+		return distanceMin;
+	}
+	
+	/**
+	 * Fonction récursive qui renvoie la distance minimale pour une réduction de n à k couleurs
+	 * @param debut
+	 * @param k
+	 * @return
+	 */
+	public int decomposeRec(int debut, int k) {
+		int distance = 0, distanceRet = -1;
+		if (k == 1) {
+			return distanceMin(debut, palette.length-1);
+		}
+		for (int i = debut ; i < palette.length-1 ; i++) {
+			distance = distanceMin(debut, i) + decomposeRec(i+1, k-1);
+			if (distanceRet == -1 || distance < distanceRet) {
+				distanceRet = distance;
+			}
+		}
+		return distanceRet;
+	}
+	
+	/**
+	 * Fonction itérative respectant le principe de la programmation dynamique
+	 * @param debut
+	 * @param k
+	 * @return
+	 */
+	public int decomposeIt(int debut, int k) {
+		int[][] res = new int[k][palette.length];
+		
+		// Initialisation du tableau pour les cas de base
+		for (int i = 0; i < palette.length; i++) {
+			res[0][i] = distanceMin(i, palette.length-1);
+		}
+		for (int i = 1; i < k; i++) {
+			for (int j = 0; j < palette.length; j++) {
+				res[i][j] = -1;
+			}
+		}
+		// Remplissage du tableau 
+		if(k > 1) {
+			for (int q=1; q<k; q++) {
+				for (int i=debut; i<=palette.length-(q+1); i++) {
+					int distance = 0;
+					for (int j=i; j<=palette.length-(q+1); j++) {
+						distance = distanceMin(i, j) + res[q-1][j+1];
+						if(res[q][i] == -1 || distance < res[q][i]) {
+							res[q][i] = distance;
+							/*
+							 *  Ajout des intervalles correspondant
+							 */
+							if((i == debut) && (q == (k-1))) {
+								this.intervalles.clear();
+								this.intervalles.add(new Intervalle(debut,j));	
+								int fst = j+1;
+								int snd = this.palette.length-(k-1);
+								for (int p=0; p<(k-1); p++) {
+									this.intervalles.add(new Intervalle(fst,snd));
+									fst = ++snd;
+								}
+							}
+						}
+					}
+				}				
+			}			
+		}	
+		return res[k-1][debut];
+	}
+	
+	/**
+	 * TODO méthode + javadoc
+	 * @param valeur
+	 */
+	public void remplirIntervalles(int valeur) {
+		
+	}
+	
+	/**
+	 * Parse une image
+	 * @param nomFichier
+	 * @param resultat
+	 */
+	public void parserFichierPGM(final String nomFichier, final String resultat){
+		try {
+			BufferedWriter ecriture = new BufferedWriter(new FileWriter(resultat));
+			BufferedReader lecteur = new BufferedReader(new FileReader(nomFichier));
+			BufferedReader parcours = new BufferedReader(new FileReader(nomFichier));
+			String temp;
+			String retour = null;
+			int i = 1;
+			int j = 0;
+			String[][] result = null;
+			String[] tmp;
+			Integer val = 0;
+			this.palette_tmp = new HashMap<Integer, Integer>();
+			int nbLignes = 0;
+			
+			while ((temp = parcours.readLine()) != null) {
+				nbLignes++;
+			}
+			parcours.close();
+			
+			while ((temp = lecteur.readLine()) != null){
+				if (i == 1){
+					retour = temp + "\n";
+				} else if (i == 2){
+					result = new String[nbLignes-3][];
+					retour = retour + temp + "\n";
+				} else if (i == 3) {
+					retour = retour + temp + "\n";
+				} else {
+					tmp = temp.split(" ");
+					result[j] = new String[tmp.length];
+					result[j++] = temp.split(" ");
+					
+					
+					
+					/** ___________________DEBUT______________________________________________ */
+					
+					
+					for(String s : tmp) {
+						if (!this.palette_tmp.containsKey(Integer.parseInt(s))) {
+							this.palette_tmp.put(Integer.parseInt(s), 1);
+						} else {
+							val = this.palette_tmp.get(Integer.parseInt(s));
+							this.palette_tmp.remove(Integer.parseInt(s));
+							this.palette_tmp.put(Integer.parseInt(s), val + 1);
+						}
+					}
+					
+					
+				}
+				i++;
+			}
+			
+			List<Integer> l = new ArrayList<Integer>(this.palette_tmp.keySet());
+			Collections.sort(l);
+			
+			int[] palette_init = new int[l.size()];
+			int[] poids_init = new int[l.size()];
+			
+			for(int p=0; p<l.size(); p++) {
+				palette_init[p] = l.get(p);
+				poids_init[p] = this.palette_tmp.get(l.get(p));
+			}
+			
+			this.setPalette(palette_init);
+			this.setPoids(poids_init);
+			
+			/** TODO : changer variable en dur */
+			this.decomposeIt(0, 3);
+			
+			int cpt = 1;
+			for(Intervalle intervalle : this.getIntervalles()) {
+				System.out.println(cpt++ + " : " + intervalle.getFst() + " à " + intervalle.getSnd());
+			}
+			
+			int[] new_palette = new int[this.getIntervalles().size()];
+			
+			for(int k=0; k<this.getIntervalles().size(); k++) {
+				new_palette[k] = this.meilleurGris(this.getIntervalles().get(k).getFst(), this.getIntervalles().get(k).getSnd());
+			}
+			
+			for (int k=0 ; k<result.length; k++){
+				for (int m=0; m<result[k].length; m++){
+					for (int y=0; y<this.getIntervalles().size(); y++){
+						if (Integer.parseInt(result[k][m]) >= palette_init[this.getIntervalles().get(y).getFst()] && Integer.parseInt(result[k][m]) <= palette_init[this.getIntervalles().get(y).getSnd()]){
+							result[k][m] = ""+new_palette[y];
+						}
+					}
+					retour += result[k][m]+" ";
+				}
+				retour += "\n";
+				System.out.println(""+k);
+			}
+			
+			
+			for(int valeur : palette_init) {
+				System.out.print(valeur + "\t");
+			}
+			System.out.println();
+			for(int valeur : poids_init) {
+				System.out.print(valeur + "\t");
+			}
+			/** ___________________FIN______________________________________________ */
+			
+			ecriture.write(retour);
+			ecriture.close();
+			lecteur.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+		
+	public List<Intervalle> getIntervalles() {
+		return intervalles;
+	}
+
+	public int[] getPalette() {
+		return palette;
+	}
+
+	public void setPalette(int[] palette) {
+		this.palette = palette;
+	}
+
+	public int[] getPoids() {
+		return poids;
+	}
+
+	public void setPoids(int[] poids) {
+		this.poids = poids;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int[] palette  = {5,5,1,1,2,1,10};
+		int[] gris  = {0,20,100,132,164,180,255};
+		Reduction r = new Reduction(palette, gris);
+		int deb = 0;
+		int fin = 6;
+		
+		// Question 1
+		System.out.println("Tableau des distances minimales :");
+		for(int i=0; i<=fin; i++) {
+			for(int k=0; k<i; k++) {
+				System.out.print("\t");
+			}
+			for (int j=i; j<=fin; j++) {
+				System.out.print(r.distanceMin(i, j) + "\t");
+			}
+			System.out.println();
+		}
+		
+		// Question 2		
+		System.out.println("Test iteratif : "+r.decomposeIt(deb, 5));
+		
+		System.out.println("\nListe des intervalles :");		
+		int cpt = 1;
+//		for(Intervalle intervalle : r.getIntervalles()) {
+//			System.out.println(cpt++ + " : " + intervalle.getFst() + " à " + intervalle.getSnd());
+//		}
+		
+//		System.out.println("Test récursif : "+r.decomposeRec(deb, 4));
+		
+		r.parserFichierPGM("baboon_gray.pgm", "test6.pgm");
+	}
+
+}

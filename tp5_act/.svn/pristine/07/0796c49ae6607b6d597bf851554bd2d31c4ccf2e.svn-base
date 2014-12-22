@@ -1,0 +1,53 @@
+package app;
+
+/**
+ * 
+ * classe abstraite du parcoureur de solution pour BinPacking
+ *
+ */
+public abstract class SolutionWalkerBinPack implements SolutionWalker {
+
+	PartialSolution ps;
+	EnumerationObjets e;
+	
+	public SolutionWalkerBinPack(PblBinPack pbl, PartialSolution ps, EnumerationObjets en) {
+		this.ps = new PartialSolutionBinPack(pbl, en);
+		this.e = en;
+	}
+
+	@Override
+	public boolean Terminated() {
+		return this.ps.complete();
+	}
+
+	@Override
+	public void NextPartialSolution() {
+		//implémenter selon le critère glouton!
+		if(! this.Terminated()) {
+
+			int i =e.NextElement();	
+	
+			ps.addNextFit(i);
+			ps.addFirstFit(i);
+			ps.addBestFit(i);
+			ps.partNextFit(i);
+
+		} else {
+			System.out.println("No more object.");
+		}
+	}
+
+	@Override
+	public PartialSolution Current() {
+		return this.ps;
+	}
+	
+	@Override
+	public void run() {
+		while(! this.Terminated()) {
+     		this.NextPartialSolution();
+			
+		}
+		this.Current().display();
+	}
+}
