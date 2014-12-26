@@ -32,70 +32,65 @@ public class Methodes{
 
     /** place les elements de T dans un ordre aleatoire */
     public void aleaT(){
-	Random random = new Random(); 
-	int place;
-	int tmp;
-	
-	for (int i=0; i < this.size; i++){
-	    place = i+random.nextInt(this.size-i);
-	    tmp = this.T[i];
-	    this.T[i] = this.T[place];
-	    this.T[place] = tmp;
-	}
+		Random random = new Random(); 
+		int place;
+		int tmp;
+		for (int i=0; i < this.size; i++){
+			place = i+random.nextInt(this.size-i);
+			tmp = this.T[i];
+			this.T[i] = this.T[place];
+			this.T[place] = tmp;
+		}
     } 
 
     /** teste la presence de e dans L en utilisant la methode
      * contains */
     public boolean rechercheL(int e){
-	
-	return this.L.contains(e);
+		return this.L.contains(e);
     }
 
     /** teste la presence de e dans T en utilisant une recherche
      * sequentielle  */
     public boolean rechercheT(int e){
-	for(int j=0;j<this.size;j++){
-	    if (this.T[j] == e) {
-		return true;
-	    }
-	}
-	return false;
+		for(int j=0;j<this.size;j++){
+			if (this.T[j] == e) {
+			return true;
+			}
+		}
+		return false;
     }
 
     /** recherche de la valeur du minimum de L en utilisant la methode
      * min de la classe Collections */
     public int minimumSimpleL(){
-	
-	return ((Integer)Collections.min(this.L)).intValue();
+		return ((Integer)Collections.min(this.L)).intValue();
     }
 
     /** recherche de la valeur du minimum de T en utilisant une
      * recherche séquentielle */
     public int minimumSimpleT(){
-	int min = 0;
-	for(int j=1;j<this.size;j++){
-	    if (this.T[min] > this.T[j]) {
-		min = j;
-	    }
-	}
-	return this.T[min];
+		int min = 0;
+		for(int j=1;j<this.size;j++){
+			if (this.T[min] > this.T[j]) {
+			min = j;
+			}
+		}
+		return this.T[min];
     }
     
     
     /** recherche de la valeur du minimum de L en triant L grace a la
      * methode sort de la classe Collections */
     public int minimumTriL(){
-
-	Collections.sort(this.L);
-	return ((Integer)this.L.get(0)).intValue();
+		Collections.sort(this.L);
+		return ((Integer)this.L.get(0)).intValue();
    }
 
     /** recherche de la valeur du minimum de T en triant T grace a la
      * methode sort de la classe Arrays */
     public int minimumTriT(){
-
-	Arrays.sort(this.T);
-	return this.T[0];
+		Arrays.sort(this.T);
+		return this.T[0];
    }
 
     /** Range dans l'ordre croissant les éléments de la liste en utilisant la double inversion */

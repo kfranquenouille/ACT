@@ -32,14 +32,13 @@ public class Mesure{
      *************************************************************************/
 
     public Mesure(int[] tSize, int[] tRep){
-	this.tSize = tSize;
-	this.tRep = tRep;
-	this.tRes = new double[tSize.length];
+		this.tSize = tSize;
+		this.tRep = tRep;
+		this.tRes = new double[tSize.length];
 
-	for(int i = 0; i < this.tRes.length ; i++){
-	    this.tRes[i] = 0;
-	} 
-	
+		for(int i = 0; i < this.tRes.length ; i++){
+			this.tRes[i] = 0;
+		} 
     }
   
 
@@ -56,28 +55,28 @@ public class Mesure{
      * de l'element 0 qui est contenu dans L */
 
     public void mesureRechercheL(){
-	double startTime;
-	double totalTime;
-	boolean present;
+		double startTime;
+		double totalTime;
+		boolean present;
 
-	this.resetRes();
+		this.resetRes();
 	
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaL(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  present = M.rechercheL(0);
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaL(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  present = M.rechercheL(0);
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
    /** ecrit dans tRes[] les moyennes de temps de calcul de rechercheT
      * sur les nombres contenus dans tRep[] d'executions sur des donnees
@@ -85,28 +84,28 @@ public class Mesure{
      * de l'element 0 qui est contenu dans T */
 
     public void mesureRechercheT(){
-	double startTime;
-	double totalTime;
-	boolean present;
+		double startTime;
+		double totalTime;
+		boolean present;
 
-	this.resetRes();
+		this.resetRes();
 	
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaT(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  present = M.rechercheT(0);
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaT(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  present = M.rechercheT(0);
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
 
 
@@ -115,56 +114,56 @@ public class Mesure{
      * sur des donnees dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMinimumSimpleL(){
-	double startTime;
-	double totalTime;
-	int min;
+		double startTime;
+		double totalTime;
+		int min;
 
-	this.resetRes();
+		this.resetRes();
 	
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaL(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  min = M.minimumSimpleL();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaL(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  min = M.minimumSimpleL();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
     /** ecrit dans tRes[] les moyennes de temps de calcul de
      * minimumSimpleT sur les nombres contenus dans tRep[] d'executions
      * sur des donnees dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMinimumSimpleT(){
-	double startTime;
-	double totalTime;
-	int min;
+		double startTime;
+		double totalTime;
+		int min;
 	
-	this.resetRes();
+		this.resetRes();
 
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaT(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  min = M.minimumSimpleT();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaT(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  min = M.minimumSimpleT();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
 
     /** ecrit dans tRes[] les moyennes de temps de calcul de minimumTriL
@@ -172,56 +171,56 @@ public class Mesure{
      * dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMinimumTriL(){
-	double startTime;
-	double totalTime;
-	int min;
+		double startTime;
+		double totalTime;
+		int min;
 	
-	this.resetRes();
+		this.resetRes();
 
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaL(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  min = M.minimumTriL();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaL(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  min = M.minimumTriL();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
     /** ecrit dans tRes[] les moyennes de temps de calcul de minimumTriT
      * sur les nombres contenus dans tRep[] d'executions sur des donnees
      * dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMinimumTriT(){
-	double startTime;
-	double totalTime;
-	int min;
+		double startTime;
+		double totalTime;
+		int min;
 	
-	this.resetRes();
+		this.resetRes();
 
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaT(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  min = M.minimumTriT();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaT(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  min = M.minimumTriT();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
 
 
@@ -230,54 +229,54 @@ public class Mesure{
      * dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMystereL(){
-	double startTime;
-	double totalTime;
+		double startTime;
+		double totalTime;
 	
-	this.resetRes();
+		this.resetRes();
 
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaL(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  M.mystereL();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaL(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  M.mystereL();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
     /** ecrit dans tRes[] les moyennes de temps de calcul de mystereT sur
      * les nombres contenus dans tRep[] d'executions sur des donnees
      * dont les tailles sont indiquees dans tSize[] */
 
     public void mesureMystereT(){
-	double startTime;
-	double totalTime;
+		double startTime;
+		double totalTime;
 	
-	this.resetRes();
+		this.resetRes();
 
-	  for (int i=0; i < this.tSize.length; i++){
+		  for (int i=0; i < this.tSize.length; i++){
 
-	      Methodes M = new Methodes(this.tSize[i]);
+			  Methodes M = new Methodes(this.tSize[i]);
 
-	      for(int j = 0; j < this.tRep[i]; j++){	      
+			  for(int j = 0; j < this.tRep[i]; j++){	      
 
-		  M.aleaT(); /** nouvelle instance */
-		  
-		  startTime = System.nanoTime();
-		  M.mystereT();
-		  totalTime = (System.nanoTime() - startTime);
-		  this.tRes[i] = this.tRes[i] + totalTime;
-	      }
-	      this.tRes[i] = this.tRes[i]/this.tRep[i];
+			  M.aleaT(); /** nouvelle instance */
+			  
+			  startTime = System.nanoTime();
+			  M.mystereT();
+			  totalTime = (System.nanoTime() - startTime);
+			  this.tRes[i] = this.tRes[i] + totalTime;
+			  }
+			  this.tRes[i] = this.tRes[i]/this.tRep[i];
 	
-	  }
+		  }
     }
 
     /** ecrit dans tRes[] les moyennes de temps de calcul de aleaL sur
@@ -285,46 +284,46 @@ public class Mesure{
      * dont les tailles sont indiquees dans tSize[] */
     
     public void mesureAleaL(){
-	double startTime;
-	double totalTime;
+		double startTime;
+		double totalTime;
 	
-	this.resetRes();
+		this.resetRes();
 
-	for (int i=0; i < this.tSize.length; i++){
-	    
-	    Methodes M = new Methodes(this.tSize[i]);
-	    
-	    for(int j = 0; j < this.tRep[i]; j++){	      
-		startTime = System.nanoTime();
-		M.aleaL();
-		totalTime = (System.nanoTime() - startTime);
-		this.tRes[i] = this.tRes[i] + totalTime;
-	    }
-	    this.tRes[i] = this.tRes[i]/this.tRep[i];	
-	}
+		for (int i=0; i < this.tSize.length; i++){
+			
+			Methodes M = new Methodes(this.tSize[i]);
+			
+			for(int j = 0; j < this.tRep[i]; j++){	      
+			startTime = System.nanoTime();
+			M.aleaL();
+			totalTime = (System.nanoTime() - startTime);
+			this.tRes[i] = this.tRes[i] + totalTime;
+			}
+			this.tRes[i] = this.tRes[i]/this.tRep[i];	
+		}
     }
      /** ecrit dans tRes[] les moyennes de temps de calcul de aleaT sur
      * les nombres contenus dans tRep[] d'executions sur des donnees
      * dont les tailles sont indiquees dans tSize[] */
     
     public void mesureAleaT(){
-	double startTime;
-	double totalTime;
+		double startTime;
+		double totalTime;
 
-	this.resetRes();
+		this.resetRes();
 	
-	for (int i=0; i < this.tSize.length; i++){
-	    
-	    Methodes M = new Methodes(this.tSize[i]);
-	    
-	    for(int j = 0; j < this.tRep[i]; j++){	      
-		startTime = System.nanoTime();
-		M.aleaT();
-		totalTime = (System.nanoTime() - startTime);
-		this.tRes[i] = this.tRes[i] + totalTime;
-	    }
-	    this.tRes[i] = this.tRes[i]/this.tRep[i];	
-	}
+		for (int i=0; i < this.tSize.length; i++){
+			
+			Methodes M = new Methodes(this.tSize[i]);
+			
+			for(int j = 0; j < this.tRep[i]; j++){	      
+			startTime = System.nanoTime();
+			M.aleaT();
+			totalTime = (System.nanoTime() - startTime);
+			this.tRes[i] = this.tRes[i] + totalTime;
+			}
+			this.tRes[i] = this.tRes[i]/this.tRep[i];	
+		}
     }
    
     /**************************************************************************
